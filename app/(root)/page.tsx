@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 
 export default function Home() {
@@ -6,12 +7,7 @@ export default function Home() {
     <div className="grid min-h-screen place-items-center">
       <h3>Threads clone - Thrends</h3>
 
-      <Button
-        // variant={"default"}
-        className="bg-primary text-primary-foreground"
-      >
-        button
-      </Button>
+      <UserButton />
     </div>
   );
 }
