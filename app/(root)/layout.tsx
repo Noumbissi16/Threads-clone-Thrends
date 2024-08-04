@@ -4,6 +4,12 @@ import "../globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/themeToggle";
 import { ClerkProvider } from "@clerk/nextjs";
+import {
+  BottomBar,
+  LeftSideBar,
+  RightSideBar,
+  TopBar,
+} from "@/components/shared";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,10 +33,18 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="absolute top-5 right-5">
+            <div className="absolute top-[50px] right-5 z-[100]">
               <ModeToggle />
             </div>
-            {children}
+            <TopBar />
+            <main className="flex flex-row">
+              <LeftSideBar />
+              <section className="main-container">
+                <div className="w-full max-w-4xl">{children}</div>
+              </section>
+              <RightSideBar />
+            </main>
+            <BottomBar />
           </ThemeProvider>
         </ClerkProvider>
       </body>
