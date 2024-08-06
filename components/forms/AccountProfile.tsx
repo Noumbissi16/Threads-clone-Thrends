@@ -18,10 +18,12 @@ import Image from "next/image";
 import { Textarea } from "../ui/textarea";
 import { isBase64Image } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadThing";
+import { updateUser } from "@/lib/actions/user.action";
+import { usePathname, useRouter } from "next/navigation";
 
 interface Props {
   user: {
-    id: string | undefined;
+    id: string;
     objectId: string;
     username: string;
     name: string;
@@ -33,6 +35,10 @@ interface Props {
 
 const AccountProfile = ({ user, btnTitle }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
+
+  const router = useRouter();
+
+  const pathname = usePathname();
 
   const { startUpload } = useUploadThing("media");
 
@@ -52,7 +58,6 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
 
       fileReader.onload = async (event) => {
         const imageDataUrl = event.target?.result?.toString() || "";
-        console.log(imageDataUrl);
 
         fieldChange(imageDataUrl);
       };
@@ -87,7 +92,20 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
       }
     }
 
-    // TODO: update user profile
+    await updateUser({
+      username: values.username,
+      userId: user.id,
+      bio: values.bio,
+      image: values.profile_photo,
+      name: values.name,
+      path: pathname,
+    });
+
+    if (pathname === "/profile/edit") {
+      router.back();
+    } else {
+      router.push("/");
+    }
   }
 
   return (
@@ -109,7 +127,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                     width={96}
                     height={96}
                     priority
-                    className="rounded-full object-contain w-auto h-auto overflow-hidden"
+                    className="rounded-full object-contain"
                   />
                 ) : (
                   <Image

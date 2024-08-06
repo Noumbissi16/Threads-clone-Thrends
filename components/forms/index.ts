@@ -1,3 +1,3 @@
 import AccountProfile from "./AccountProfile";
-
-export { AccountProfile };
+import PostThrends from "./PostThrends";
+export { AccountProfile, PostThrends };
