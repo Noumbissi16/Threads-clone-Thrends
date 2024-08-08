@@ -93,8 +93,7 @@ export async function fetchThrendById(threndId: string) {
             },
           },
         ],
-      })
-      .exec();
+      });
 
     return thrend;
   } catch (error: any) {

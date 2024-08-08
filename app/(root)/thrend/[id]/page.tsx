@@ -41,6 +41,7 @@ const ThrendDetail = async ({ params }: { params: { id: string } }) => {
       <div className="mt-10">
         {thrend.children.map((child: any) => (
           <ThrendCard
+            key={child.id}
             id={child._id}
             currentUserId={user?.id}
             parentId={child.parentId}
