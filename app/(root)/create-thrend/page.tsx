@@ -16,7 +16,7 @@ const CreateThrends = async () => {
   return (
     <>
       <h1 className="head-text">CreateThrends</h1>
-      <PostThrends userId={userInfo._id} />
+      <PostThrends userId={JSON.parse(JSON.stringify(userInfo._id))} />
     </>
   );
 };
