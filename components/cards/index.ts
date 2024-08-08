@@ -1,3 +1,4 @@
 import ThrendCard from "./ThrendCard";
+import UserCard from "./UserCard";
 
-export { ThrendCard };
+export { UserCard, ThrendCard };

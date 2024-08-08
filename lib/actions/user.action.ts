@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 import Thrend from "../models/thrend.model";
+import { FilterQuery, SortOrder } from "mongoose";
 
 interface Params {
   username: string;
@@ -76,5 +77,54 @@ export async function fetchUserPosts(userId: string) {
     return thrends;
   } catch (error: any) {
     throw new Error(`Failed to fetch user posts: ${error.message}`);
+  }
+}
+
+export async function fetUsers({
+  userId,
+  searchString = "",
+  pageNumber = 1,
+  pageSize = 20,
+  sortBy = "desc",
+}: {
+  userId: string;
+  searchString?: string;
+  pageNumber?: number;
+  pageSize?: number;
+  sortBy?: SortOrder;
+}) {
+  try {
+    connectToDB();
+
+    const skipAmount = (pageNumber - 1) * pageSize;
+
+    const regex = new RegExp(searchString, "i");
+
+    const query: FilterQuery<typeof User> = {
+      id: { $ne: userId },
+    };
+
+    if (searchString.trim() !== "") {
+      query.$or = [
+        { name: { $regex: regex } },
+        { username: { $regex: regex } },
+      ];
+    }
+
+    const sortOptions = {
+      createdAt: sortBy,
+    };
+
+    const usersQuery = User.find(query)
+      .sort(sortOptions)
+      .skip(skipAmount)
+      .limit(pageSize);
+
+    const totalUsersCount = await User.countDocuments(query);
+    const users = await usersQuery.exec();
+    const isNext = totalUsersCount > skipAmount + users.length;
+    return { users, isNext };
+  } catch (error: any) {
+    throw new Error(`Failed to fetch users: ${error.message}`);
   }
 }
