@@ -1,15 +1,11 @@
 import { ThrendCard } from "@/components/cards";
 import { fetchPosts } from "@/lib/actions/thrend.action";
 import { currentUser } from "@clerk/nextjs/server";
-import { useRouter } from "next/navigation";
 
 export default async function Home() {
-  // const router = useRouter();
-
   const results = await fetchPosts(1, 30);
   const user = await currentUser();
   if (!user) {
-    // router.push("/login");
     return null;
   }
 
