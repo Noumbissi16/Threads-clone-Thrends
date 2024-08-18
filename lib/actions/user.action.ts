@@ -128,3 +128,30 @@ export async function fetUsers({
     throw new Error(`Failed to fetch users: ${error.message}`);
   }
 }
+
+export async function getActivity(userId: string) {
+  try {
+    connectToDB();
+    // find all the thrends created by the user
+    const userThreads = await Thrend.find({ author: userId });
+    // Collect all the child thread ids(replies) from children fiels
+
+    const childThrendIds = userThreads.reduce((acc, userThrend) => {
+      return acc.concat(userThrend.children);
+    }, []);
+
+    // find all replies except those made by same user
+    const replies = await Thrend.find({
+      _id: { $in: childThrendIds },
+      author: { $ne: userId },
+    }).populate({
+      path: "author",
+      model: User,
+      select: "name image _id",
+    });
+
+    return replies;
+  } catch (error: any) {
+    throw new Error(`Error fetching user's activities ${error.message}`);
+  }
+}
