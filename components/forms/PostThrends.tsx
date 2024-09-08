@@ -16,12 +16,13 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { ThrendValidation } from "@/lib/validations/thrend";
 import { createThrend } from "@/lib/actions/thrend.action";
+import { useOrganization } from "@clerk/nextjs";
 interface Props {
   userId: string;
 }
 const PostThrends = ({ userId }: Props) => {
   const router = useRouter();
-
+  const { organization } = useOrganization();
   const pathname = usePathname();
 
   // 1. Define your form.
@@ -38,6 +39,7 @@ const PostThrends = ({ userId }: Props) => {
       author: values.accountId,
       text: values.thrend,
       path: pathname,
+      communityId: organization ? organization.id : null,
     });
 
     router.push("/");

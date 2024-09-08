@@ -5,6 +5,7 @@ import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
 import Thrend from "../models/thrend.model";
 import { FilterQuery, SortOrder } from "mongoose";
+import Community from "../models/community.model";
 
 interface Params {
   username: string;
@@ -48,11 +49,10 @@ export async function updateUser({
 export const fetUser = async (userId: string) => {
   try {
     connectToDB();
-    const user = await User.findOne({ id: userId });
-    //    .populate({
-    //      path: "communities",
-    //      model: Community
-    //  })
+    const user = await User.findOne({ id: userId }).populate({
+      path: "communities",
+      model: Community,
+    });
     return user;
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`);
@@ -66,13 +66,23 @@ export async function fetchUserPosts(userId: string) {
     const thrends = await User.findOne({ id: userId }).populate({
       path: "thrends",
       model: Thrend,
-      populate: {
-        path: "children",
-        model: Thrend,
-        populate: { path: "author", model: User, select: "name id image" },
-      },
+      populate: [
+        {
+          path: "community",
+          model: Community,
+          select: "name id image _id", // Select the "name" and "_id" fields from the "Community" model
+        },
+        {
+          path: "children",
+          model: Thrend,
+          populate: {
+            path: "author",
+            model: User,
+            select: "name id image",
+          },
+        },
+      ],
     });
-    // TODO: populate community
 
     return thrends;
   } catch (error: any) {

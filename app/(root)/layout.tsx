@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ModeToggle } from "@/components/themeToggle";
 import { ClerkProvider } from "@clerk/nextjs";
 import {
   BottomBar,
@@ -28,9 +27,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <ClerkProvider>
           <ThemeProvider attribute="class" defaultTheme="dark">
-            <div className="absolute top-[50px] right-5 z-[100]">
-              <ModeToggle />
-            </div>
             <TopBar />
             <main className="flex flex-row">
               <LeftSideBar />
