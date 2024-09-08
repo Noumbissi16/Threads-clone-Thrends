@@ -204,12 +204,17 @@ export async function fetchThrendById(threndId: string) {
   }
 }
 
-export async function addCommentToThrend(
-  threndId: string,
-  commentText: string,
-  userId: string,
-  path: string
-) {
+export async function addCommentToThrend({
+  threndId,
+  commentText,
+  userId,
+  path,
+}: {
+  threndId: string;
+  commentText: string;
+  userId: string;
+  path: string;
+}) {
   connectToDB();
 
   try {
